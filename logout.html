@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTS - Logging Out</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- LOGOUT SECTION -->
+  <section class="logout-hero">
+    <div class="logout-container">
+
+      <h2>Logging You Out</h2>
+      <p>Please wait while we securely sign you out.</p>
+
+      <!-- Loader -->
+      <div class="logout-loader"></div>
+
+    </div>
+  </section>
+
+  
+  <script>
+    localStorage.removeItem("utsLoggedUser");
+
+    setTimeout(() => {
+      alert("You have been logged out successfully!");
+      window.location.href = "index.html";
+    }, 800);
+  </script>
+
+</body>
+</html>

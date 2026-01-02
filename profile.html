@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTS - Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <input type="checkbox" id="menu-toggle" />
+    <div class="nav-brand">🚉 UTS</div>
+    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" id="bookNav">Book Ticket</a></li>
+
+      <!-- Before login -->
+      <li id="loginLink"><a href="login.html">Login</a></li>
+      <li id="registerLink"><a href="register.html">Register</a></li>
+
+      <!-- After login -->
+      <li id="userDropdown" style="display:none;">
+        <div class="dropdown">
+          <a href="#" id="navUsername">User ▼</a>
+          <div class="dropdown-content">
+            <a href="profile.html">Profile</a>
+            <a href="#" id="logoutBtn">Logout</a>
+          </div>
+        </div>
+      </li>
+
+      <li><a href="ticket-summary.html">Ticket Summary</a></li>
+      <li><a href="help.html">Help</a></li>
+    </ul>
+  </nav>
+
+  <!-- PROFILE SECTION -->
+  <section class="profile-hero"  style="background:url('profile page.jpg') center/cover;">
+    
+    <div class="profile-container">
+
+      <h2>Your Profile</h2>
+      <p class="subtitle">
+        View your personal information registered with UTS
+      </p>
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+
+        <div class="profile-row">
+          <strong>👤 Full Name</strong>
+          <span id="pname"></span>
+        </div>
+
+        <div class="profile-row">
+          <strong>📧 Email</strong>
+          <span id="pemail"></span>
+        </div>
+
+        <div class="profile-row">
+          <strong>📱 Mobile</strong>
+          <span id="pmobile"></span>
+        </div>
+
+      </div>
+
+      <!-- Back Button -->
+      <button class="form-btn" onclick="window.location.href='index.html'">
+        ⬅ Back to Home
+      </button>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 Unreserved Ticket System
+  </footer>
+
+  
+  <script>
+    // LOGIN PROTECTION
+    const user = JSON.parse(localStorage.getItem("utsLoggedUser"));
+    if (!user) {
+      window.location.href = "login.html?redirect=profile.html";
+    }
+
+    // FILL PROFILE DATA
+    document.getElementById("pname").textContent = user.name || user.fullName;
+    document.getElementById("pemail").textContent = user.email;
+    document.getElementById("pmobile").textContent = user.mobile;
+
+    // NAVBAR UPDATE
+    function updateNavbar() {
+      const loginLink = document.getElementById("loginLink");
+      const registerLink = document.getElementById("registerLink");
+      const userDropdown = document.getElementById("userDropdown");
+      const usernameDisplay = document.getElementById("navUsername");
+
+      if (user) {
+        loginLink.style.display = "none";
+        registerLink.style.display = "none";
+        usernameDisplay.textContent = (user.name || user.fullName) + " ▼";
+        userDropdown.style.display = "inline-block";
+      } else {
+        loginLink.style.display = "inline-block";
+        registerLink.style.display = "inline-block";
+        userDropdown.style.display = "none";
+      }
+    }
+    updateNavbar();
+
+    // BOOK TICKET BUTTON PROTECTION
+    function requireLogin() {
+      if (!localStorage.getItem("utsLoggedUser")) {
+        window.location.href = "login.html?redirect=booking.html";
+      } else {
+        window.location.href = "booking.html";
+      }
+    }
+    document.getElementById("bookNav").addEventListener("click", requireLogin);
+
+    // LOGOUT
+    document.getElementById("logoutBtn")?.addEventListener("click", () => {
+      localStorage.removeItem("utsLoggedUser");
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>
+
+

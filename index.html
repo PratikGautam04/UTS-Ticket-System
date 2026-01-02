@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTS - Home</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar">
+    <input type="checkbox" id="menu-toggle" />
+    <div class="nav-brand">🚉 UTS</div>
+    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="#" id="bookNav">Book Ticket</a></li>
+
+      <li id="loginLink"><a href="login.html">Login</a></li>
+      <li id="registerLink"><a href="register.html">Register</a></li>
+
+      <li id="userDropdown" style="display:none;">
+        <div class="dropdown">
+          <a href="#" id="navUsername">User ▼</a>
+          <div class="dropdown-content">
+            <a href="profile.html">Profile</a>
+            <a href="logout.html" id="logoutBtn">Logout</a>
+          </div>
+        </div>
+      </li>
+
+      <li><a href="ticket-summary.html">Ticket Summary</a></li>
+      <li><a href="help.html">Help</a></li>
+    </ul>
+  </nav>
+
+  <!--  HERO  -->
+  <section class="main-img">
+    <img src="home page icon.jpg" alt="Train Travel">
+
+    <div class="text-overlay">
+      <div class="hero-content">
+        <h1>Unreserved Ticket System</h1>
+        <p>
+          A smart and secure way to book unreserved train tickets anytime,
+          anywhere — without queues.
+        </p>
+        <p>Designed for fast, paperless, and hassle-free travel.</p>
+
+        <a href="#" id="bookHero" class="hero-btn">Book Ticket Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!--  QUICK ACTIONS  -->
+  <section class="features">
+    <h2>Quick Actions</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🎫 Book Ticket</h3>
+        <p>Book unreserved tickets in just a few clicks.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📄 Ticket Summary</h3>
+        <p>View and manage your booked tickets easily.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>❓ Help & Support</h3>
+        <p>Get assistance and answers to common questions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!--  HOW IT WORKS  -->
+  <section class="features">
+    <h2>How It Works</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>1️⃣ Create Account</h3>
+        <p>Register with your email and mobile number.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>2️⃣ Enter Journey</h3>
+        <p>Select source, destination, date, and class.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>3️⃣ Get Ticket</h3>
+        <p>Confirm booking and receive your ticket instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!--  WHY UTS  -->
+  <section class="features">
+    <h2>Why Choose UTS?</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>⚡ Fast Booking</h3>
+        <p>No queues, no paperwork, instant booking.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🔐 Secure System</h3>
+        <p>Protected login and user data safety.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📱 Easy to Use</h3>
+        <p>Simple interface for all users.</p>
+      </div>
+    </div>
+  </section>
+
+  <!--  CTA  -->
+  <section class="last-section">
+    <h2>Travel Smart with UTS</h2>
+    <p>
+      Join thousands of passengers who trust UTS for quick,
+      paperless railway ticketing.
+    </p>
+
+    <a href="register.html" class="last-btn">Get Started →</a>
+  </section>
+
+  <!--  FOOTER  -->
+  <footer>
+    © 2025 Unreserved Ticket System
+  </footer>
+
+  
+  <script>
+    function isLoggedIn() {
+      return localStorage.getItem("utsLoggedUser") !== null;
+    }
+
+    function updateNavbar() {
+      const user = JSON.parse(localStorage.getItem("utsLoggedUser"));
+      const loginLink = document.getElementById("loginLink");
+      const registerLink = document.getElementById("registerLink");
+      const userDropdown = document.getElementById("userDropdown");
+      const usernameDisplay = document.getElementById("navUsername");
+
+      if (user) {
+        loginLink.style.display = "none";
+        registerLink.style.display = "none";
+        usernameDisplay.textContent = user.name + " ▼";
+        userDropdown.style.display = "inline-block";
+      } else {
+        loginLink.style.display = "inline-block";
+        registerLink.style.display = "inline-block";
+        userDropdown.style.display = "none";
+      }
+    }
+
+    updateNavbar();
+
+    function handleBookingRedirect() {
+      if (!isLoggedIn()) {
+        window.location.href = "login.html?redirect=booking.html";
+      } else {
+        window.location.href = "booking.html";
+      }
+    }
+
+    document.getElementById("bookNav").addEventListener("click", handleBookingRedirect);
+    document.getElementById("bookHero").addEventListener("click", handleBookingRedirect);
+
+    document.getElementById("logoutBtn")?.addEventListener("click", () => {
+      localStorage.removeItem("utsLoggedUser");
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTS - Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar">
+    <input type="checkbox" id="menu-toggle" />
+    <div class="nav-brand">🚉 UTS</div>
+    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="booking.html" id="bookNav">Book Ticket</a></li>
+
+      <li id="loginLink"><a href="login.html" class="active">Login</a></li>
+      <li id="registerLink"><a href="register.html">Register</a></li>
+
+      <li id="userDropdown" style="display:none;">
+        <div class="dropdown">
+          <a href="#" id="navUsername">User ▼</a>
+          <div class="dropdown-content">
+            <a href="profile.html">Profile</a>
+            <a href="logout.html" id="logoutBtn">Logout</a>
+          </div>
+        </div>
+      </li>
+
+      <li><a href="ticket-summary.html">Ticket Summary</a></li>
+      <li><a href="help.html">Help</a></li>
+    </ul>
+  </nav>
+
+  <!--  LOGIN SECTION  -->
+  <section class="page-hero"
+    style="background:url('https://t4.ftcdn.net/jpg/02/95/90/05/360_F_295900594_QG3JqyYUBXnSPKo6ECYfL4Qn8KfwUgUl.jpg') center/cover;">
+    
+    <div class="page-content">
+
+      <!-- Header -->
+      <h2>Welcome Back</h2>
+      <p style="margin-bottom:20px; color:#555;">
+        Login to manage your unreserved tickets and travel details.
+      </p>
+
+      <!-- Form -->
+      <form class="uts-form" id="loginForm">
+
+        <label>Email or Mobile</label>
+        <input type="text" id="loginInput" placeholder="Enter email or mobile number">
+
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password">
+
+        <small id="loginMessage"></small>
+
+        <button type="submit" class="form-btn">Login</button>
+
+        <p class="forgot-link">
+          <a href="forgot-password.html">Forgot Password?</a>
+        </p>
+
+      </form>
+
+      <!-- Footer text -->
+      <p style="margin-top:15px;">
+        Don’t have an account?
+        <a href="register.html"><b>REGISTER HERE</b></a>
+      </p>
+
+    </div>
+  </section>
+
+  <!--  FOOTER  -->
+  <footer>
+    © 2025 Unreserved Ticket System
+  </footer>
+
+
+  <script>
+    // NAVBAR UPDATE
+    function updateNavbar() {
+      const user = JSON.parse(localStorage.getItem("utsLoggedUser"));
+      if (user) {
+        loginLink.style.display = "none";
+        registerLink.style.display = "none";
+        navUsername.textContent = user.name + " ▼";
+        userDropdown.style.display = "inline-block";
+      }
+    }
+    updateNavbar();
+
+    // LOGIN WITH ATTEMPT LIMIT
+    let attempts = 0;
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const input = loginInput.value.trim();
+      const password = loginPassword.value.trim();
+      const message = loginMessage;
+
+      message.style.display = "block";
+
+      if (!input || !password) {
+        message.textContent = "All fields are required.";
+        message.className = "error";
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("utsUsers")) || [];
+
+      const user = users.find(
+        u => (u.email === input || u.mobile === input) && u.password === password
+      );
+
+      if (!user) {
+        attempts++;
+        message.textContent = `Wrong password. Attempts left: ${3 - attempts}`;
+        message.className = "error";
+
+        if (attempts >= 3) {
+          message.textContent = "Too many failed attempts. Try later.";
+          document.querySelector(".form-btn").disabled = true;
+        }
+        return;
+      }
+
+      localStorage.setItem("utsLoggedUser", JSON.stringify(user));
+      message.textContent = "Login successful!";
+      message.className = "success";
+
+      setTimeout(() => {
+        const redirect = new URLSearchParams(location.search).get("redirect");
+        location.href = redirect || "index.html";
+      }, 1000);
+    });
+
+    // BOOK TICKET PROTECTION
+    bookNav.addEventListener("click", function(e) {
+      e.preventDefault();
+      localStorage.getItem("utsLoggedUser")
+        ? location.href = "booking.html"
+        : location.href = "login.html?redirect=booking.html";
+    });
+
+    // LOGOUT
+    logoutBtn?.addEventListener("click", () => {
+      localStorage.removeItem("utsLoggedUser");
+      location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>

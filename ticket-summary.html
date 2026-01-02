@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTS - Ticket Summary</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar">
+    <input type="checkbox" id="menu-toggle" />
+    <div class="nav-brand">🚉 UTS</div>
+    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" id="bookNav">Book Ticket</a></li>
+
+      <li id="loginLink"><a href="login.html">Login</a></li>
+      <li id="registerLink"><a href="register.html">Register</a></li>
+
+      <li id="userDropdown" style="display:none;">
+        <div class="dropdown">
+          <a href="#" id="navUsername">User ▼</a>
+          <div class="dropdown-content">
+            <a href="profile.html">Profile</a>
+            <a href="logout.html" id="logoutBtn">Logout</a>
+          </div>
+        </div>
+      </li>
+
+      <li><a href="ticket-summary.html" class="active">Ticket Summary</a></li>
+      <li><a href="help.html">Help</a></li>
+    </ul>
+  </nav>
+
+  <!--  TICKET SUMMARY  -->
+  <section class="page-hero"
+    style="background:url('ticket summary.jpg') center/cover;">
+
+    <div class="ticket-summary-box">
+
+      <!-- Header -->
+      <h2>🎫 Ticket Booked Successfully</h2>
+      <p style="margin-bottom:25px; color:#555;">
+        Please review your journey details below
+      </p>
+
+      <!-- Ticket Receipt -->
+      <div class="ticket-details">
+
+        <p><strong>Ticket ID:</strong> <span id="ticketId"></span></p>
+
+        <hr>
+
+        <p><strong>From:</strong> <span id="source"></span></p>
+        <p><strong>To:</strong> <span id="destination"></span></p>
+
+        <hr>
+
+        <p><strong>Class:</strong> <span id="travelClass"></span></p>
+        <p><strong>Passengers:</strong> <span id="passengers"></span></p>
+
+        <hr>
+
+        <p><strong>Date of Journey:</strong> <span id="date"></span></p>
+        <p style="font-size:1.1rem;">
+          <strong>Total Fare:</strong>
+          <span id="fare" style="color:#0072ff; font-weight:bold;"></span>
+        </p>
+
+      </div>
+
+      <!-- CTA Buttons -->
+      <div style="margin-top:25px;">
+        <button onclick="window.location.href='index.html'">
+          ⬅ Back to Home
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!--  FOOTER  -->
+  <footer>
+    © 2025 Unreserved Ticket System
+  </footer>
+
+ 
+  <script>
+
+    const loggedUser = JSON.parse(localStorage.getItem("utsLoggedUser"));
+    if (!loggedUser) {
+      window.location.href = "login.html?redirect=ticket-summary.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const ticket = JSON.parse(localStorage.getItem("utsTicket"));
+
+      if (!ticket) {
+        alert("No ticket found! Please book a ticket first.");
+        window.location.href = "booking.html";
+        return;
+      }
+
+      document.getElementById("ticketId").textContent = ticket.id;
+      document.getElementById("source").textContent = ticket.source;
+      document.getElementById("destination").textContent = ticket.destination;
+      document.getElementById("travelClass").textContent =
+        ticket.travelClass || ticket.class || "N/A";
+      document.getElementById("passengers").textContent = ticket.passengers;
+      document.getElementById("fare").textContent = "₹ " + ticket.totalFare;
+      document.getElementById("date").textContent = ticket.date;
+    });
+
+    function updateNavbar() {
+      const user = JSON.parse(localStorage.getItem("utsLoggedUser"));
+      const loginLink = document.getElementById("loginLink");
+      const registerLink = document.getElementById("registerLink");
+      const userDropdown = document.getElementById("userDropdown");
+      const usernameDisplay = document.getElementById("navUsername");
+
+      if (user) {
+        loginLink.style.display = "none";
+        registerLink.style.display = "none";
+        usernameDisplay.textContent = (user.name || user.fullName) + " ▼";
+        userDropdown.style.display = "inline-block";
+      } else {
+        loginLink.style.display = "inline-block";
+        registerLink.style.display = "inline-block";
+        userDropdown.style.display = "none";
+      }
+    }
+    updateNavbar();
+
+    function requireLogin() {
+      if (!localStorage.getItem("utsLoggedUser")) {
+        window.location.href = "login.html?redirect=booking.html";
+      } else {
+        window.location.href = "booking.html";
+      }
+    }
+    document.getElementById("bookNav").addEventListener("click", requireLogin);
+
+    document.getElementById("logoutBtn")?.addEventListener("click", () => {
+      localStorage.removeItem("utsLoggedUser");
+      window.location.href = "index.html";
+    });
+
+  </script>
+
+</body>
+</html>
